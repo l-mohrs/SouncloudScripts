@@ -1,8 +1,9 @@
 const openPlaylistDelay = 1500;
 const addPlaylistDelay = 1500;
-const likeTrackDelay = 500;
+const likeTracksDelay = 500;
+const scrollDelay = 500;
 
-const playlistName = "Target";
+const playlistName = "Good Sets";
 
 const listItems = Array.from(
   document.querySelectorAll(
@@ -10,7 +11,20 @@ const listItems = Array.from(
   )
 );
 
-const likeTrack = (index) => {
+const scrollToBottomOfPlaylist = async (previousDocumentHeight) => {
+  const documentHeight = document?.body?.scrollHeight;
+  if (previousDocumentHeight >= documentHeight) {
+    console.log("Scrolled to bottom");
+    return;
+  }
+  window.scrollTo(0, document.body.scrollHeight);
+  setTimeout(() => {
+    return scrollToBottomOfPlaylist(documentHeight);
+  }, scrollDelay);
+};
+
+const likeTracks = (index) => {
+  scrollToBottomOfPlaylist(0);
   const node = listItems[index];
 
   if (!node) {
@@ -18,7 +32,7 @@ const likeTrack = (index) => {
     return;
   }
 
-    const hasLikedButton = node.querySelector(
+  const hasLikedButton = node.querySelector(
     ".sc-button-like.sc-button-selected"
   );
 
@@ -26,20 +40,21 @@ const likeTrack = (index) => {
     console.log("Already liked index: ", index);
 
     setTimeout(() => {
-      likeTrack(index + 1);
+      likeTracks(index + 1);
     }, 0);
 
     return;
   }
-    node.querySelector(".sc-button-like").click();
-    console.log("Added index: ", index);
+  node.querySelector(".sc-button-like").click();
+  console.log("Added index: ", index);
 
-    setTimeout(() => {
-      likeTrack(index + 1);
-    }, likeTrackDelay);
-}
+  setTimeout(() => {
+    likeTracks(index + 1);
+  }, likeTracksDelay);
+};
 
-const addTrackToPlaylist = (index) => {
+const addTracksToPlaylist = async (index) => {
+  console.log({ listItems });
   const node = listItems[index];
 
   if (!node) {
@@ -62,7 +77,7 @@ const addTrackToPlaylist = (index) => {
       console.log("Already added index: ", index);
 
       setTimeout(() => {
-        addTrackToPlaylist(index + 1);
+        addTracksToPlaylist(index + 1);
       }, 0);
 
       return;
@@ -72,10 +87,11 @@ const addTrackToPlaylist = (index) => {
     console.log("Added index: ", index);
 
     setTimeout(() => {
-      addTrackToPlaylist(index + 1);
+      addTracksToPlaylist(index + 1);
     }, addPlaylistDelay);
   }, openPlaylistDelay);
 };
 
-// addTrackToPlaylist(0);
-likeTrack(0);
+scrollToBottomOfPlaylist(0);
+// addTracksToPlaylist(0);
+// likeTracks(0);
