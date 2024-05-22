@@ -23,7 +23,7 @@ const scrollToBottomOfPlaylist = async (previousDocumentHeight) => {
   }, scrollDelay);
 };
 
-const likeTracks = (index) => {
+const likeTracks = async (index) => {
   scrollToBottomOfPlaylist(0);
   const node = listItems[index];
 
@@ -54,6 +54,7 @@ const likeTracks = (index) => {
 };
 
 const addTracksToPlaylist = async (index) => {
+  scrollToBottomOfPlaylist(0);
   console.log({ listItems });
   const node = listItems[index];
 
@@ -92,6 +93,55 @@ const addTracksToPlaylist = async (index) => {
   }, openPlaylistDelay);
 };
 
-scrollToBottomOfPlaylist(0);
+const addAndLikeTracks = async (index) => {
+  const node = listItems[index];
+
+  if (!node) {
+    console.log("Finished");
+    return;
+  }
+
+  const hasLikedButton = node.querySelector(
+    ".sc-button-like.sc-button-selected"
+  );
+
+  if (hasLikedButton) {
+    console.log("Already liked index: ", index);
+  } else {
+    node.querySelector(".sc-button-like").click();
+    console.log("Added index: ", index);
+  }
+
+  node.querySelector(".sc-button-more").click();
+  document.querySelector("button.sc-button-addtoset").click();
+
+  setTimeout(() => {
+    const playlistRow = Array.from(
+      document.querySelectorAll(".addToPlaylistList__item")
+    ).find((node) => node.querySelector(`[title="${playlistName}"]`));
+    const playListButton = playlistRow.querySelector(
+      "button.addToPlaylistButton:not(.sc-button-selected)"
+    );
+
+    if (!playListButton) {
+      console.log("Already added index: ", index);
+
+      setTimeout(() => {
+        addAndLikeTracks(index + 1);
+      }, 0);
+
+      return;
+    }
+
+    playListButton.click();
+    console.log("Added index: ", index);
+
+    setTimeout(() => {
+      addAndLikeTracks(index + 1);
+    }, addPlaylistDelay);
+  }, openPlaylistDelay);
+};
+
 // addTracksToPlaylist(0);
 // likeTracks(0);
+// addAndLikeTracks(0);
