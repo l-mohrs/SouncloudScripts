@@ -24,7 +24,7 @@ const scrollToBottomOfPlaylist = async (previousDocumentHeight) => {
 };
 
 const likeTracks = async (index) => {
-  scrollToBottomOfPlaylist(0);
+  await scrollToBottomOfPlaylist(0);
   const node = listItems[index];
 
   if (!node) {
@@ -46,7 +46,7 @@ const likeTracks = async (index) => {
     return;
   }
   node.querySelector(".sc-button-like").click();
-  console.log("Added index: ", index);
+  console.log("Liked index: ", index);
 
   setTimeout(() => {
     likeTracks(index + 1);
@@ -54,8 +54,7 @@ const likeTracks = async (index) => {
 };
 
 const addTracksToPlaylist = async (index) => {
-  scrollToBottomOfPlaylist(0);
-  console.log({ listItems });
+  await scrollToBottomOfPlaylist(0);
   const node = listItems[index];
 
   if (!node) {
@@ -94,6 +93,7 @@ const addTracksToPlaylist = async (index) => {
 };
 
 const addAndLikeTracks = async (index) => {
+  await scrollToBottomOfPlaylist(0);
   const node = listItems[index];
 
   if (!node) {
@@ -109,7 +109,7 @@ const addAndLikeTracks = async (index) => {
     console.log("Already liked index: ", index);
   } else {
     node.querySelector(".sc-button-like").click();
-    console.log("Added index: ", index);
+    console.log("Liked index: ", index);
   }
 
   node.querySelector(".sc-button-more").click();
